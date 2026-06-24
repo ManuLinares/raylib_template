@@ -1,0 +1,63 @@
+{
+	"dependency-search-paths": [ "lib" ],
+	"dependencies": [ "raylib6" ],
+	"authors": [ "John Doe <john.doe@example.com>" ],
+	"version": "0.1.0",
+	"sources": [ "src/**" ],
+	"build-dir": "build",
+	"output": "build",
+	"targets": {
+		"default": {
+			"name": "mygame",
+			"type": "executable"
+		},
+		"release": {
+			"name": "mygame",
+			"type": "executable",
+			"opt": "O1",
+			"debug-info": "none",
+			"link-args": [ "-s" ]
+		},
+		"windows": {
+			"name": "mygame",
+			"type": "executable",
+			"target": "windows-x64"
+		},
+		"windows_release": {
+			"name": "mygame",
+			"type": "executable",
+			"target": "windows-x64",
+			"opt": "O1",
+			"debug-info": "none",
+			"link-args": [ "-s" ]
+		},
+		"web": {
+			"type": "executable",
+			"name": "index.html",
+			"target": "emscripten",
+			"link-args": [
+				"--preload-file resources@resources",
+				"-sUSE_GLFW=3",
+				"-sEXPORTED_RUNTIME_METHODS=['HEAPF32']",
+				"--shell-file src/minshell.html"
+			]
+		},
+		"web_release": {
+			"type": "executable",
+			"name": "index.html",
+			"target": "emscripten",
+			"link-args": [
+				"--preload-file resources@resources",
+				"-sUSE_GLFW=3",
+				"-sEXPORTED_RUNTIME_METHODS=['HEAPF32']",
+				"--shell-file src/minshell.html",
+				"-O3",
+				"-s",
+				"-g0"
+			]
+		}
+	},
+	"cpu": "generic",
+	"opt": "O0",
+	"debug-info": "full"
+}

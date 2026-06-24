@@ -1,0 +1,96 @@
+name: Deploy mygame to GithubPages and Release Binaries
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Emscripten (emsdk)
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: '6.0.1'
+          actions-cache-folder: 'emsdk-cache'
+
+      - name: Setup C3 Compiler
+        uses: ManuLinares/setup-c3@main
+        with:
+          version: nightly
+          build-type: release
+
+      - name: Build Web Target
+        run: c3c build web_release
+
+      - name: Organize Web Assets
+        run: |
+          mkdir -p dist_web
+          cp build/index.* preview.jpg dist_web/ || true
+
+      - name: Fetch Windows SDK for Cross-Compilation
+        run: c3c fetch-sdk windows --accept-license
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libx11-dev \
+            libxrandr-dev \
+            libxinerama-dev \
+            libxi-dev \
+            libxxf86vm-dev \
+            libxcursor-dev
+
+      - name: Build Linux Target
+        run: c3c build release
+
+      - name: Build Windows Target
+        run: c3c build windows_release
+
+      - name: Organize Release Binaries
+        run: |
+          mkdir -p dist_release
+          cp -r resources build/
+          cd build
+          zip -r ../dist_release/mygame-linux.zip mygame resources
+          zip -r ../dist_release/mygame-windows.zip mygame.exe resources
+          cd ../dist_web
+          zip -r ../dist_release/mygame-web.zip .
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist_web/
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/deploy-pages@v5
+
+      # Handle Release Creation (only when a tag is pushed, for example tag: "v0.1.0")
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            dist_release/mygame-linux.zip \
+            dist_release/mygame-windows.zip \
+            dist_release/mygame-web.zip \
+            --title "${{ github.ref_name }}" \
+            --generate-notes || \
+          gh release upload "${{ github.ref_name }}" \
+            dist_release/mygame-linux.zip \
+            dist_release/mygame-windows.zip \
+            dist_release/mygame-web.zip \
+            --clobber
