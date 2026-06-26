@@ -1,3 +1,20 @@
+<a href="https://c3-lang.org">
+  <img src="https://c3-lang.org/assets/logo.svg" align="right" height="100" />
+</a>
+
+### C3 raylib gamejam template
+
+[raylib-6x-gamejam 2026](https://itch.io/jam/raylib-6x-gamejam)
+
+1. Download [C3](https://github.com/c3lang/c3c/#c3-language)
+2. Build it with `c3c build`, or run it with `c3c run`
+
+*See project.json for other build commands like `c3c build web` or `c3c build web_release`*
+
+*See .github/workflows/main.yml for customizing the github workflow*
+
+---
+
 ## $(Game Title)
 
 ![$(Game Title)](preview.jpg "$(Game Title)")
