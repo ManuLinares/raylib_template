@@ -12,7 +12,7 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			height: 100vh
+			height: 100vh;
 		}
 
 		/* for raylib gamejam https://itch.io/jam/raylib-6x-gamejam */
@@ -30,13 +30,19 @@
 </head>
 
 <body>
-	<canvas id="canvas" style="outline:none" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+	<canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
 	<script>
 		var Module = {
 			canvas: document.getElementById('canvas'),
 			print: console.log,
 			printErr: console.error
 		};
+		document.addEventListener('keydown', (e) => {
+			if (e.key.toLowerCase() === 'f') {
+				if (!document.fullscreenElement) Module.canvas.requestFullscreen();
+				else document.exitFullscreen();
+			}
+		});
 	</script>
 	{{{ SCRIPT }}}
 </body>

@@ -37,8 +37,7 @@
 			"target": "emscripten",
 			"link-args": [
 				"--preload-file resources@resources",
-				"-sUSE_GLFW=3",
-				"-sEXPORTED_RUNTIME_METHODS=['HEAPF32']",
+				"-sEXPORTED_RUNTIME_METHODS=HEAPF32",
 				"--shell-file src/minshell.html"
 			]
 		},
@@ -48,8 +47,7 @@
 			"target": "emscripten",
 			"link-args": [
 				"--preload-file resources@resources",
-				"-sUSE_GLFW=3",
-				"-sEXPORTED_RUNTIME_METHODS=['HEAPF32']",
+				"-sEXPORTED_RUNTIME_METHODS=HEAPF32",
 				"--shell-file src/minshell.html",
 				"-O3",
 				"-s",

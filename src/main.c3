@@ -244,7 +244,9 @@ fn void update_draw_frame()
 
 	if (rl::is_key_pressed(RLKeyboardKey.F) || rl::is_key_pressed(RLKeyboardKey.F11))
 	{
-		rl::toggle_fullscreen();
+		$if !env::WASM:
+			rl::toggle_fullscreen();
+		$endif
 	}
 
 	if (current_screen != CLICK_TO_PLAY)
