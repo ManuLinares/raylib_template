@@ -46,7 +46,9 @@ fn void draw_options_screen()
 	bool is_fs = rl::is_window_fullscreen();
 	if (rg::check_box(check_rect, null, &is_fs) != 0)
 	{
-		rl::toggle_fullscreen();
+		$if !env::WASM:
+			rl::toggle_fullscreen();
+		$endif
 	}
 
 	// Static Info
